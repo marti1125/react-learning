@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Recent Changes (React JS Project)</title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+    integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css"
+    integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+
+    <script src="https://code.jquery.com/jquery.min.js"></script>
+
+    <script src="https://fb.me/react-15.1.0.min.js"></script>
+    <script src="https://fb.me/react-dom-15.1.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
+    <!-- Latest compiled and minified JavaScript -->
+   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+    integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+  </head>
+  <body>
+    <div id="container">
+   </div>
+    <script type="text/babel">
+
+    var data = [{ "when": "2 minutes ago",
+              "who": "Jill Dupre",
+              "description": "Created new account"
+            },
+            {
+              "when": "1 hour ago",
+              "who": "Lose White",
+              "description": "Added fist chapter"
+            },
+            {
+              "when": "2 hours ago",
+              "who": "Jordan Whash",
+              "description": "Created new account"
+            }];
+      var headings = ["Last change at", "By Author", "Summary"];
+      var title =  'Recent Changes 2';
+
+      var headingStyle = { backgroundColor: 'FloralWhite',
+                     fontSize: '19px'
+                   };
+      var trStyle = { backgroundColor: '#FFFACD',
+                     fontSize: '12px'
+                   };
+
+      var RecentChangesTable = React.createClass({
+          render: function(){
+            return <table className='table'>
+                     {this.props.children}
+                   </table>;
+          }
+      });
+
+      RecentChangesTable.Title = React.createClass({
+        render: function(){
+           return <h1>{this.props.title}</h1>
+        }
+      })
+
+      RecentChangesTable.Heading = React.createClass({
+        render: function() {
+          return <th style={headingStyle}>{this.props.heading}</th>;
+        }
+      });
+
+      RecentChangesTable.Headings = React.createClass({
+        render: function(){
+          var headings = this.props.headings.map(function(name, index) {
+              return <RecentChangesTable.Heading key={index} heading={name} />;
+          });
+          return <thead><tr>{headings}</tr></thead>;
+        }
+      });
+
+      RecentChangesTable.Row = React.createClass({
+        render: function() {
+          return <tr style={trStyle}>
+                   <td>{this.props.changeSet.when}</td>
+                   <td>{this.props.changeSet.who}</td>
+                   <td>{this.props.changeSet.description}</td>
+                 </tr>;
+        }
+      });
+
+       RecentChangesTable.Rows = React.createClass({
+        render: function(){
+          var rows = this.props.changeSets.map(function(changeSet, index){
+              return <RecentChangesTable.Row key={index} changeSet={changeSet} />;
+          });
+          return <tbody>{rows}</tbody>
+        }
+      });
+
+      var App = React.createClass({
+        propType: {
+          title: React.PropTypes.string,
+          headings: React.PropTypes.Array,
+          changeSets: React.PropTypes.Array,
+          author: React.PropTypes.string.isRequired
+        },
+        getDefaultProps: function() {
+          return {
+            headings: ['When happened ', 'Who did it', 'What they change']
+          };
+        },
+        getInitialState: function(){
+          return {
+            changeSets: [],
+            headings: ['Updated At', 'Author', 'Change']
+          };
+        },
+        handleEvent: function(data){
+          this.setState({changeSets: data.changeSets})
+        },
+        render: function(){
+            return <div>
+            <RecentChangesTable.Title title={this.props.title} />
+            <RecentChangesTable>
+              <RecentChangesTable.Headings headings={this.props.headings} />
+              <RecentChangesTable.Rows changeSets={this.props.changeSets} />
+            </RecentChangesTable></div>
+        }
+      });
+
+      var props = {headings: headings, changeSets: data, title: title};
+      ReactDOM.render(<App {...props} />, document.getElementById('container'));
+
+    </script>
+  </body>
+</html>
